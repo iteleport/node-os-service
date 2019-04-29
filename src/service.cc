@@ -168,6 +168,8 @@ NAN_METHOD(Add) {
 	std::string username;
 	std::string password;
 
+	bool is_interactive_mode = false;
+
 	if (info.Length() > 3) {
 		if (info[3]->IsString ()) {
 			Nan::Utf8String tmp_username(info[3]);
@@ -178,6 +180,9 @@ NAN_METHOD(Add) {
 			if (info[4]->IsString ()) {
 				Nan::Utf8String tmp_password(info[4]);
 				password = *tmp_password;
+			}
+			if (info.Length() > 5) {
+				is_interactive_mode = info[5]->Int32Value();
 			}
 		}
 	}
@@ -203,7 +208,7 @@ NAN_METHOD(Add) {
 	const char* ppassword = password.length() ? password.c_str() : NULL;
 
 	SC_HANDLE svc_handle = CreateService (scm_handle, *name, *display_name,
-			SERVICE_ALL_ACCESS, SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START,
+			SERVICE_ALL_ACCESS, is_interactive_mode ? SERVICE_INTERACTIVE_PROCESS : SERVICE_WIN32_OWN_PROCESS, SERVICE_AUTO_START,
 			SERVICE_ERROR_NORMAL, *path, 0, 0, deps, pusername,
 			ppassword);
 

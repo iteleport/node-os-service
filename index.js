@@ -203,6 +203,8 @@ function add (name, options, cb) {
 	var username = options ? (options.username || null) : null;
 	var password = options ? (options.password || null) : null;
 
+	var isInteractiveMode = !!(options && options.isInteractiveMode);
+
 	if (os.platform() == "win32") {
 		var displayName = (options && options.displayName)
 				? options.displayName
@@ -233,7 +235,7 @@ function add (name, options, cb) {
 
 		try {
 			getServiceWrap ().add (name, displayName, servicePath, username,
-					password, deps);
+					password, deps, isInteractiveMode);
 			cb();
 		} catch (error) {
 			cb(error);
